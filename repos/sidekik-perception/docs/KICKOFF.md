@@ -42,7 +42,8 @@ Commit after each ticket (`feat(<area>): ticket <N> …`). Open a PR to `main` a
 
 ## 3. Repo-specific notes
 
-- **Ticket 4 (vision):** run the `bench/` script first (ticket 11 can move earlier). Pick the primary model from your numbers, not from the doc.
+- **Ticket 4 (vision):** run the `bench/` script first (ticket 11 can move earlier). Haiku 4.5 is the default. Tune cropping and resolution from your numbers before considering Sonnet.
+- **Before ticket 4:** prompt *"Read node_modules/@anthropic-ai/sdk type definitions and show me how to send a JPEG as a base64 image content block with a system prompt and get JSON back. Don't guess."*
 - **Frames for testing:** take 20 screenshots of the MiniERP as soon as Aadil has it; until then, use any invoice-style web form.
 
 ## 4. Integration checkpoints

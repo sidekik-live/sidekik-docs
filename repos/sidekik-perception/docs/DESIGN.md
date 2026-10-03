@@ -58,9 +58,24 @@ vision → zod-validate → normalize (amounts "6.350,00"→6350, dates→ISO, m
 
 ## 4. Vision
 
-- **Primary model:** Gemini Flash-Lite with thinking off. **Fallback:** Claude Haiku 4.5.
-- **Timeouts:** 800 ms per attempt, one retry, then fall back to the other model, then skip the frame.
-- **Hour-1 benchmark:** 20 MiniERP screenshots. Record exact-digit accuracy and p50 latency in `bench/README.md`, and pick the model from those numbers.
+All vision runs on the **Claude API** (Messages API with an image content block, `ANTHROPIC_API_KEY`).
+
+- **Primary model:** Claude Haiku 4.5 (`claude-haiku-4-5-20251001`).
+- **Escalation (optional):** if `VISION_FALLBACK` is set (e.g. `claude-sonnet-5-5`), re-run a frame on it only when Haiku reports confidence <0.7 on a numeric field (`net_amount`, `cost_center`, `invoice_id`). If unset, retry Haiku once.
+- **Timeouts:** 2,000 ms per attempt, one retry, then skip the frame. The next changed frame will carry the change.
+- **Image size:**
+  - Send at most 1280 px wide.
+  - Send **cropped changed tiles** whenever the diff allows; that's the biggest cost and latency lever.
+  - Claude bills images by pixel area, so a full 1280×720 frame costs about 1.2k input tokens.
+- **Rough cost:**
+  - About 0.15–0.4 calls/s with diffing, so roughly 100–250 calls per 10-minute session.
+  - With mostly cropped frames, that's well under $1 per session on Haiku (estimate).
+  - Log real numbers through `usage` records.
+- **Hour-1 benchmark:**
+  - 20 MiniERP screenshots, run on Haiku 4.5, with Sonnet 5.5 as a comparison.
+  - Record exact-digit accuracy and p50/p95 latency in `bench/README.md`.
+  - If Haiku is below ~95% exact digits, crop tighter or raise the resolution before switching models.
+  - The MiniERP DOM events already supply ground-truth values for the demo.
 
 Prompt (keep it verbatim in `src/vision/prompt.ts`):
 
@@ -88,7 +103,7 @@ If nothing changed return {"events":[],"state":PREVIOUS_STATE}.
 
 ## 6. Env
 
-`PORT, REDIS_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SK_SESSION_SECRET, SK_INTERNAL_TOKEN, GEMINI_API_KEY, ANTHROPIC_API_KEY, VISION_PRIMARY, VISION_FALLBACK, PRESIDIO_IMAGE_URL`
+`PORT, REDIS_URL, SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, SK_SESSION_SECRET, SK_INTERNAL_TOKEN, ANTHROPIC_API_KEY, VISION_PRIMARY, VISION_FALLBACK (optional), VISION_TIMEOUT_MS, PRESIDIO_IMAGE_URL`
 
 The Docker image must include `ffmpeg` and `sharp` (libvips).
 
@@ -97,7 +112,7 @@ The Docker image must include `ffmpeg` and `sharp` (libvips).
 1. Fastify scaffold, env, `/healthz`, bus wiring.
 2. Frames WebSocket with token check, header parsing and a 2 fps cap.
 3. `diff.ts`: pHash and tile grid, with unit tests on fixture images.
-4. `vision.ts`: Gemini and Haiku adapters, zod output, timeout/retry/fallback, usage records.
+4. `vision.ts`: Claude adapter (`@anthropic-ai/sdk`, image content block, JSON-only output parsed with zod), timeout/retry, optional escalation model, usage records with token counts from the API response.
 5. `normalize.ts`: German and English amount/date parsing, with tests (`6.350,00`, `6,350.00`, `12/2026`, `03.12.2026`).
 6. State merge, event diff, DOM override, typing detection.
 7. Persist and publish, plus `ctx` batching.

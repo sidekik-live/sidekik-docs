@@ -107,7 +107,7 @@ Brain uses it to call Jev. Mapper and tutor use it to know what answers can come
   - Adds an `org_read` select policy on every table.
   - `learner_attempts` and `mastery` get an extra policy: rows are visible only to the learner themself or to admin/manager roles.
 - Writes come only from services, which use the service role. The browser only reads, except `consent_records` inserts, which go through the gateway.
-- Index `(session_id, t_ms)` on `screen_events`, `transcript_turns` and `decisions_log`. Add an HNSW index on `kb_chunks.embedding vector(768)` with cosine distance.
+- Index `(session_id, t_ms)` on `screen_events`, `transcript_turns` and `decisions_log`. Add the GIN indexes on `kb_chunks.tsv` and `kb_chunks.content` (trigram), plus the `search_kb()` function, exactly as in `docs/SCHEMA.md`.
 - **Columns, constraints and indexes are fully specified in `docs/SCHEMA.md`.** Implement them as written. Each owner reviews their own migration file (CODEOWNERS).
 
 ## 7. Versioning
