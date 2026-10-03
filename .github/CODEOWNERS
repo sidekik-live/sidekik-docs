@@ -1,0 +1,11 @@
+# Replace the placeholders with real GitHub handles before pushing.
+*                              @<sahil-github> @<aadil-github> @<mayukh-github>
+/repos/sidekik-platform/       @<sahil-github>
+/repos/sidekik-perception/     @<sahil-github>
+/repos/sidekik-brain/          @<sahil-github>
+/repos/sidekik-web/            @<aadil-github>
+/repos/sidekik-voice/          @<aadil-github>
+/repos/sidekik-meetbot/        @<aadil-github>
+/repos/sidekik-gateway/        @<mayukh-github>
+/repos/sidekik-mapper/         @<mayukh-github>
+/repos/sidekik-tutor/          @<mayukh-github>
