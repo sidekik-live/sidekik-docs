@@ -34,7 +34,7 @@ sidekik-voice/
 
 | Setting | Interviewer | Tutor |
 |---|---|---|
-| LLM | Claude Haiku 4.5 (keep the platform's default backup cascade) | Claude Haiku 4.5; switch to Sonnet if explanations are weak |
+| LLM | Claude Haiku 4.5 from ElevenLabs' built-in model list (keep the platform's default backup cascade) | Claude Haiku 4.5 (built-in); switch to a Sonnet model if explanations are weak |
 | Voice | Eleven v3 Conversational (Expressive Mode), calm, curious | Same model, warm, patient |
 | ASR | Scribe v2 Realtime (`scribe_realtime`) | same |
 | Languages | de + en, language detection on | en (quotes translated) |
@@ -47,6 +47,17 @@ sidekik-voice/
 | Post-call webhook | `https://hooks.sidekik.live/elevenlabs/post-call` (transcription only, no audio) | same |
 
 All webhook tools send the header `X-Sidekik-Tool-Secret: $SK_TOOL_SECRET`.
+
+### Who pays for the agents' LLM
+
+**Default (use this for the hackathon):** pick Claude from ElevenLabs' built-in LLM list. ElevenLabs calls Claude and bills it with the agent minutes. Our `ANTHROPIC_API_KEY` is **not** used here, and there's nothing to host.
+
+**Optional: run the agents on the team's own Claude key.**
+- In the agent's LLM settings, choose **Custom LLM**. ElevenLabs then sends OpenAI-style Chat Completions requests to the URL you give it.
+- Point it at an OpenAI-compatible route to Claude: either an LLM gateway that forwards to Anthropic's OpenAI-compatible endpoint, or a small proxy in this repo (`POST /llm/chat/completions` → Anthropic Messages API).
+- Store the key as an ElevenLabs secret.
+- **Costs:** an extra network hop on every turn (budget roughly +100–300 ms), and you must test that tool calls (`skip_turn`, client tools) survive the translation.
+- Only do this once Checkpoint 3 passes.
 
 ### Interviewer, capture prompt
 
