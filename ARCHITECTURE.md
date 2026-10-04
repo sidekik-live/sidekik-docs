@@ -1,4 +1,4 @@
-# Sidekik: System Architecture (v0.3.3)
+# Sidekik: System Architecture (v0.3.4)
 
 > **Sidekik** is an AI apprentice. It watches an expert work on their screen and asks why at the right moments. It turns that session into a Work Map, then coaches the next hire through the same work on their own screen.
 > Hack-Nation 7th Global AI Hackathon, Challenge 01 (ElevenLabs) · Domain: **sidekik.live** (Cloudflare) · Team: **Sahil, Aadil, Mayukh**

@@ -41,6 +41,7 @@ This repo holds documentation only. It is the **single source of truth**. Every 
 |---|---|---|
 | [`ARCHITECTURE.md`](ARCHITECTURE.md) | Whole system, contracts, ownership, domains, deployment, timeline, decision specs D1–D12, Work Map types, demo guardrails G1–G5 | everyone (synced to every repo) |
 | [`SCHEMA.md`](SCHEMA.md) | Every Supabase table, column, index, RLS policy, bucket, plus the seed/demo data | everyone (synced to every repo) |
+| [`SIDEKIK_DEPLOYMENT.md`](SIDEKIK_DEPLOYMENT.md) | Where everything runs (Lovable, Railway, Supabase, Cloudflare), ports, internal URLs, every service's variables, vendor webhooks, DNS for `sidekik.live` and `sidekick.live`, smoke tests | whoever deploys |
 | `repos/<repo>/docs/DESIGN.md` | Build spec for one repo: interfaces, pipeline, env vars, **ordered tickets**, definition of done | that repo's owner and Claude Code |
 | `repos/<repo>/docs/KICKOFF.md` | Copy-paste prompts: first plan, ticket loop, checkpoint checks, contract issues, deploy | that repo's owner |
 | `repos/<repo>/CLAUDE.md` | Claude Code entry point; imports `docs/DESIGN.md`, `docs/ARCHITECTURE.md`, `docs/SCHEMA.md` and sets repo rules | Claude Code |
