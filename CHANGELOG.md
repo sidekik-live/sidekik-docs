@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.3.4 (2026-10-04): deployment guide
+
+- **New `SIDEKIK_DEPLOYMENT.md`:** checked against each repo's `main`. It covers where each service runs, ports and private Railway URLs, routes, every service's variables, the secrets matrix, Supabase and contracts release steps, vendor webhooks (ElevenLabs, Recall), Cloudflare records (with `sidekick.live` as a redirect-only domain) and smoke tests.
+- **Found while writing it:** `sidekik-mapper/.env.example` still lists `GEMINI_API_KEY` and `EMBED_*`, which `src/env.ts` no longer reads (Mayukh).
+
 ## v0.3.3 (2026-10-04): the presave answer names the field to highlight
 
 - **Contracts (additive, `v0.3.0`):** `PresaveResponse.field?` is the `InvoiceState` field for the blocking guardrail, the same one the `intervene` command carries: the field the guardrail requires (G1 → `cost_center`), else its step's field (G2 → `asset_number`).
