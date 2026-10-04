@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.3.1 (2026-10-04): what the switch to @sidekik/contracts v0.1.0 changed
+
+- **All repos:** use pnpm 10 (`packageManager: pnpm@10.34.6`). pnpm 9 puts `#` in the git dependency's install path, which vitest can't load.
+- **sidekik-gateway:** `.env.example` lists `INGEST_URL` (it was only in the gateway repo). The agent-host `sk_token` carries the session's own role (`expert` or `learner`), since `SessionRole` has no agent-host role. `/internal/redact` takes `lang` and `keep` and answers 503 when Presidio fails.
+- **sidekik-mapper:** publish checks the map against `WorkMapSchema`, writes `work_map_steps`/`guardrails`/`step_evidence` before requesting clips (also on confirmation), retires the previously published version and deletes its `kb_chunks`. `confirmed_turn_id` is written to its column. `recall_context` omits `t_ms` for published knowledge.
+- **sidekik-tutor:** `get_expert_moment` omits `clip_url` until a clip exists and answers 404 for a step without a reason. A mastery summary for a session without a learner uses `learner_id: "anonymous"`.
+
 ## v0.3 (2026-10-03): Node 22, per-question decision answers, contracts release flow
 
 - **Stack:** Node 22 and `node:22-slim` in every repo. Node 20 reached end of life in April 2026, and `@supabase/supabase-js` now requires Node ≥ 22.
