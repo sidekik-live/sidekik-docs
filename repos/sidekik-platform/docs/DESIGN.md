@@ -22,7 +22,7 @@ This repo holds the shared code that every service uses:
 
 ```
 sidekik-platform/
-  package.json            # name "@sidekik/contracts", main dist/index.js, files ["dist"], prepare: "tsc"
+  package.json            # name "@sidekik/contracts", main dist/index.js, files ["dist"]; no prepare (tags carry dist/)
   src/
     index.ts              # re-exports everything
     contracts/
@@ -128,7 +128,7 @@ Brain uses it to call Jev. Mapper and tutor use it to know what answers can come
 7. `infra/presidio/recognizers.yaml`, tested on 10 sample German/English AP sentences.
 8. `dev/replay.ts` plus the two fixture files (hand-write them now; replace them with real recordings after H14).
 9. `smoke.sh`.
-10. Tag `v0.1.0`.
+10. Tag `v0.1.0` with `pnpm release 0.1.0`. It builds `dist/` onto a detached commit and tags that commit; `main` never holds `dist/`.
 
 ## 9. Definition of done
 
