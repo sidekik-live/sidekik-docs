@@ -38,7 +38,7 @@ The browser holds the voice session; no backend streams audio. Services publish 
 | `sidekik-brain` | private | 8082 | none | `/internal/decide` | yes |
 | `sidekik-mapper` | private | 8083 | none | `/internal/workmaps/:id/{publish,export}`, `/internal/tools/recall_context`, `/internal/workflows/:id/compare` | yes |
 | `sidekik-tutor` | `mcp.sidekik.live` | 8084 | `/mcp` (bearer `SK_TOOL_SECRET`) | `/internal/presave`, `/internal/tools/*` | yes |
-| `sidekik-voice` | `hooks.sidekik.live` | 8085 | ElevenLabs post-call webhook | `/internal/token` | not yet |
+| `sidekik-voice` | `hooks.sidekik.live` | 8085 | ElevenLabs post-call webhook | `/internal/token` | yes |
 | `sidekik-meetbot` | `bot.sidekik.live` | 8086 | `/recall/webhook`, `WS /recall/ws/:sid/` | `/internal/bots`, `DELETE /internal/bots/:sid` | yes |
 | `sidekik-web` | `app.sidekik.live` | — | the app | — | Lovable |
 
@@ -47,7 +47,7 @@ Every service serves `GET /healthz` → `{ok, version, deps}` (503 when a depend
 ## Order
 
 1. Supabase project, migrations, seed.
-2. `@sidekik/contracts` tag (already cut: currently `v0.3.1`).
+2. `@sidekik/contracts` tag (already cut: currently `v0.3.2`).
 3. Railway: Redis, Presidio.
 4. gateway → voice → perception → brain → mapper → tutor → meetbot.
 5. Lovable custom domain and env.
@@ -77,7 +77,7 @@ Every service serves `GET /healthz` → `{ok, version, deps}` (503 when a depend
 `sidekik-platform` is a package, not a service: never deploy it to Railway.
 
 - Releases: `pnpm release X.Y.Z && git push upstream vX.Y.Z`. The tag points at a detached commit carrying the prebuilt `dist/`; `main` never holds `dist/`.
-- Services pin a tag: `"@sidekik/contracts": "github:sidekik-live/sidekik-platform#v0.3.1"`. Never a branch.
+- Services pin a tag: `"@sidekik/contracts": "github:sidekik-live/sidekik-platform#v0.3.2"`. Never a branch.
 - If the platform repo is private, add a read-only `NPM_GITHUB_TOKEN` to Railway's build variables.
 
 ### Redis
@@ -120,7 +120,7 @@ Only what isn't obvious from the table above. Each repo's `.env.example` lists e
 
 **tutor**: `SK_TOOL_SECRET` (MCP bearer), `BRAIN_URL`. The presave path is deterministic JSON-Logic with no model call.
 
-**voice**: `ELEVENLABS_API_KEY`, `EL_INTERVIEWER_AGENT_ID`, `EL_TUTOR_AGENT_ID`, `EL_WEBHOOK_SECRET`, `SK_TOOL_SECRET`, `GATEWAY_INTERNAL_URL`.
+**voice**: `ELEVENLABS_API_KEY`, `EL_INTERVIEWER_AGENT_ID`, `EL_DEBRIEF_AGENT_ID`, `EL_TUTOR_AGENT_ID`, `EL_WEBHOOK_SECRET`, `SK_TOOL_SECRET`, `GATEWAY_INTERNAL_URL`. The agent ids are printed by `pnpm agents:push`, the webhook secret by `pnpm agents:webhook https://hooks.sidekik.live`.
 
 **meetbot**: `RECALL_API_KEY` and `RECALL_REGION` (the region the key belongs to; ours is `us-east-1`); `RECALL_WEBHOOK_SECRET` (Recall's workspace verification secret, `whsec_…`); `RECALL_WS_SECRET`; `PUBLIC_URL=https://bot.sidekik.live`; `APP_URL=https://app.sidekik.live`; `GATEWAY_INTERNAL_URL`; `PERCEPTION_INTERNAL_URL` (`ws://…`).
 
@@ -145,7 +145,7 @@ Only what isn't obvious from the table above. Each repo's `.env.example` lists e
 
 ## Vendor setup
 
-**ElevenLabs**: the Interviewer and Tutor agents are pushed from `sidekik-voice` (config as code). Post-call webhook → `https://hooks.sidekik.live/…` signed with `EL_WEBHOOK_SECRET`. Webhook tools call `https://api.sidekik.live/v1/tools/*` with header `X-Sidekik-Tool-Secret`; MCP uses `https://mcp.sidekik.live/mcp` with bearer `SK_TOOL_SECRET`.
+**ElevenLabs**: three agents (Interviewer, Interviewer (debrief), Tutor) are pushed from `sidekik-voice` with `pnpm agents:push` (config as code). The workspace post-call webhook is created with `pnpm agents:webhook https://hooks.sidekik.live` (→ `/elevenlabs/post-call`, HMAC with `EL_WEBHOOK_SECRET`) and attached to the agents by pushing again with `EL_POST_CALL_WEBHOOK_ID`. Webhook tools call `https://api.sidekik.live/v1/tools/*` with header `X-Sidekik-Tool-Secret`; MCP uses `https://mcp.sidekik.live/mcp` with bearer `SK_TOOL_SECRET`.
 
 **Recall.ai** (meeting mode only):
 - Webhook endpoint `https://bot.sidekik.live/recall/webhook`, subscribed to every `bot.*` status event. Recall signs it with the workspace verification secret (`RECALL_WEBHOOK_SECRET`).

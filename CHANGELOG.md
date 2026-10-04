@@ -1,5 +1,15 @@
 # Changelog
 
+## v0.3.6 (2026-10-04): sidekik-voice as built
+
+- **Contracts (additive, `v0.3.2`):** `PRICE_TABLE.elevenlabs.agent.minutes = 0.08`, so voice costs the post-call `usage` record. Latest tag: `v0.3.2`.
+- **sidekik-voice DESIGN:**
+  - **The debrief is its own agent.** ElevenLabs can't bind a prompt override to a WebRTC conversation token: `GET /v1/convai/conversation/token` takes no overrides or dynamic variables, which only the page's `startSession` can pass. So the debrief prompt and its Normal eagerness live in a third agent, **Sidekik Interviewer (debrief)**, and `/internal/token` returns its id for `phase = debrief`. Gateway and web need no change: they already start the session with the `agent_id` voice returns.
+  - New `EL_DEBRIEF_AGENT_ID` (`.env.example`, §5, deployment guide). `pnpm agents:push` and `pnpm agents:webhook` replace the agents CLI's `push`; the configs keep the CLI's layout.
+  - §4 documents the post-call signature (`elevenlabs-signature`), timeline, matching rule, 503 on failed redaction and once-per-conversation usage, and the KB/Procedure swap of earlier versions.
+- **Deployment guide:** voice is deployed (`yes`); ElevenLabs setup uses the two scripts.
+- **sidekik-web (Aadil), when the rooms get the ElevenLabs SDK:** start the session with `conversationToken` and `connectionType: "webrtc"`, and pass `el.dynamic_variables` (and the session language as `overrides.agent.language`) to `startSession`. Voice can't bind them to the token. On a `phase` command, end the session and start a new one with its token, which belongs to the debrief agent.
+
 ## v0.3.5 (2026-10-04): sidekik-meetbot as built
 
 - **Contracts (additive):** `v0.3.0` adds `SessionLifecycle.reason?` (Recall's sub code on `bot_error` / `bot_left`) and Recall prices; `v0.3.1` adds `PRICE_TABLE.recall.bot_web_4_core` ($0.60/h). Latest tag: `v0.3.1`.
