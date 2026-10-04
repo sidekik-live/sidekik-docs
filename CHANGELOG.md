@@ -1,5 +1,21 @@
 # Changelog
 
+## v0.3.5 (2026-10-04): sidekik-meetbot as built
+
+- **Contracts (additive):** `v0.3.0` adds `SessionLifecycle.reason?` (Recall's sub code on `bot_error` / `bot_left`) and Recall prices; `v0.3.1` adds `PRICE_TABLE.recall.bot_web_4_core` ($0.60/h). Latest tag: `v0.3.1`.
+- **sidekik-meetbot DESIGN:**
+  - §3 matches the current Recall API:
+    - `web_4_core` variant and `gallery_view_v2` layout (needed for per-participant H.264);
+    - `metadata.session_id`;
+    - `retention: null`;
+    - `chat_message` events;
+    - a trailing `/` on the real-time URL.
+  - Status webhooks arrive through Svix and are signed with the workspace verification secret.
+  - §4 documents the decoder flags and the drop-don't-queue rules.
+  - `.env.example` adds `PUBLIC_URL` and `FFMPEG_PATH`.
+- **sidekik-mapper:** `.env.example` drops `GEMINI_API_KEY` / `EMBED_*` (unused since v0.2), as noted in v0.3.4.
+- **ARCHITECTURE:** lifecycle `reason?` in §5, `RECALL_WEBHOOK_SECRET` in the secrets matrix, and the contracts pin example now uses the latest tag.
+
 ## v0.3.4 (2026-10-04): deployment guide
 
 - **New `SIDEKIK_DEPLOYMENT.md`:** checked against each repo's `main`. It covers where each service runs, ports and private Railway URLs, routes, every service's variables, the secrets matrix, Supabase and contracts release steps, vendor webhooks (ElevenLabs, Recall), Cloudflare records (with `sidekick.live` as a redirect-only domain) and smoke tests.

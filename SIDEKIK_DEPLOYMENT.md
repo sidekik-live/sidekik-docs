@@ -116,7 +116,7 @@ Only what isn't obvious from the table above. Each repo's `.env.example` lists e
 
 **brain**: `TYPESAFE_API_KEY` (Jev), with `OPENROUTER_API_KEY` and `ANTHROPIC_API_KEY` as fallbacks; `GATEWAY_INTERNAL_URL`. `PERSISTENCE`, `FAKE_VENDORS` and `THRESHOLDS_JSON` are dev or tuning only.
 
-**mapper**: `ANTHROPIC_API_KEY`, `BUILDER_MODEL`, `PATCH_MODEL`; `BRAIN_URL`, `GATEWAY_INTERNAL_URL`, `PERCEPTION_URL`. The Work Map build is an async job: Cloudflare cuts proxied requests at 100 s. (The repo's `.env.example` still lists `GEMINI_API_KEY` / `EMBED_*`; they're unused since v0.2.)
+**mapper**: `ANTHROPIC_API_KEY`, `BUILDER_MODEL`, `PATCH_MODEL`; `BRAIN_URL`, `GATEWAY_INTERNAL_URL`, `PERCEPTION_URL`. The Work Map build is an async job: Cloudflare cuts proxied requests at 100 s.
 
 **tutor**: `SK_TOOL_SECRET` (MCP bearer), `BRAIN_URL`. The presave path is deterministic JSON-Logic with no model call.
 
