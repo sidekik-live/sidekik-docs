@@ -60,8 +60,8 @@ Data for all read-only views comes straight from Supabase with RLS. Writes go **
 2. Consent modal → `POST /v1/sessions/:id/consent`
 3. `navigator.mediaDevices.getDisplayMedia({video:{frameRate:5}})`
    - Draw to a canvas every **1 s** (1280 px wide, `toBlob('image/jpeg', 0.7)`).
-   - Send over `WS VITE_INGEST_URL/ws/frames/:sid?t=sk_token` with the binary header `{t_ms, reason}`.
-   - Send an extra frame on MiniERP `blur`, `save` and navigation (via `postMessage` from the MiniERP tab or iframe).
+   - Send over `WS VITE_INGEST_URL/ws/frames/:sid?t=sk_token`. Each message is the header length as a **big-endian uint32**, the JSON header `{t_ms, reason}`, then the JPEG bytes (sidekik-perception DESIGN §2).
+   - Send an extra frame on MiniERP `blur`, `save` and navigation (via `postMessage` from the MiniERP tab or iframe). Perception drops frames that arrive less than ~500 ms apart, so send the extra frame in place of the next tick, or wait until 500 ms after the last frame.
 4. `useConversation()` → `startSession({conversationToken, dynamicVariables, clientTools})`
 5. Open `WS VITE_API_URL/ws/client/:sid?t=sk_token` and send:
    - `onMessage` → `{type:"turn", role, text, t_ms}`
