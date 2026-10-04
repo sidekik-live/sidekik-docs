@@ -1,5 +1,19 @@
 # Changelog
 
+## v0.3.2 (2026-10-04): sidekik-perception as built
+
+- **sidekik-perception:**
+  - `.env.example` matches the service. Gemini is gone; new: `PRESIDIO_ANALYZER_URL` / `PRESIDIO_ANONYMIZER_URL` (screen-text redaction), `FFMPEG_PATH` (optional), and the dev-only `PERSISTENCE` / `FAKE_VISION`.
+  - DESIGN documents:
+    - the frame wire format (big-endian uint32 header length) and the 2 fps cap;
+    - tile-level change detection;
+    - typing hold, keyframe rules and redaction fallback;
+    - `ctx` privacy;
+    - the clip slideshow;
+    - `GET /internal/clips/:job_id`.
+  - Perception now consumes `ask` commands (ARCHITECTURE §4.2).
+- **sidekik-web, sidekik-meetbot (needs Aadil's review):** the frames header length is a big-endian uint32. Frames less than ~500 ms apart are dropped, so the web page's extra blur/save/nav frame should replace the next tick.
+
 ## v0.3.1 (2026-10-04): what the switch to @sidekik/contracts v0.1.0 changed
 
 - **All repos:** use pnpm 10 (`packageManager: pnpm@10.34.6`). pnpm 9 puts `#` in the git dependency's install path, which vitest can't load.
