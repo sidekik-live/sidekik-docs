@@ -103,7 +103,7 @@ Built in Lovable. The 6 invoices live in `src/sandbox/invoices.json` and are lis
 - **Fields:** supplier, supplier_known, company_code, invoice_date, net_amount, currency, category, cost_center (4711 opex / 0400 capex / 0410), asset_number, approvals (button "Send for 2nd approval"), status (open / on hold / posted).
 - **DOM events:** every focus, change, record open and save attempt sends `postMessage({type:"dom", kind, record, field, before, after, state})`. The room relays it to the gateway.
 - **Pre-save hook (critical for the demo):** on Save, call `POST /v1/sessions/:sid/presave {state}` with a 300 ms timeout.
-  - `{allow:false, guardrail_id, quote}` → block the save, show the banner, highlight the field.
+  - `{allow:false, guardrail_id, quote, field?}` → block the save, show the banner, highlight `field` (the same field the `intervene` command carries).
   - Timeout or error → allow the save in capture mode, block it in tutor mode.
 - **Respond to commands:** `highlight_field` and `reset_case`.
 

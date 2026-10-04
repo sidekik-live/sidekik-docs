@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.3.3 (2026-10-04): the presave answer names the field to highlight
+
+- **Contracts (additive, `v0.3.0`):** `PresaveResponse.field?` is the `InvoiceState` field for the blocking guardrail, the same one the `intervene` command carries: the field the guardrail requires (G1 → `cost_center`), else its step's field (G2 → `asset_number`).
+- **sidekik-tutor:** `/internal/presave` returns `field`. **sidekik-gateway:** relays the whole answer (`field`, `guardrail_key`, `violations`); it used to drop every key it didn't list.
+- **sidekik-web (Aadil):** the MiniERP already highlights `res.field`; the comment in `src/sandbox/presave.ts` saying it isn't in the response yet can go.
+
 ## v0.3.2 (2026-10-04): sidekik-perception as built
 
 - **sidekik-perception:**
